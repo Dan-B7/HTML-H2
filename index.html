@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NaBH₄ Hydrogen Production Simulator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .safety-warning {
+            background: #ffeaa7;
+            border-left: 5px solid #fdcb6e;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .experiment-area {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .reaction-flask {
+            width: 150px;
+            height: 200px;
+            margin: 20px auto;
+            position: relative;
+            background: linear-gradient(to top, #0984e3 60%, transparent 40%);
+            border: 5px solid #74b9ff;
+            border-radius: 0 0 50% 50%;
+        }
+
+        .powder {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 30px;
+            background: #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .catalyst-added {
+            background: #e17055 !important;
+            color: white;
+        }
+
+        .bubbles {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .bubble {
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 50%;
+            position: absolute;
+            animation: rise 2s infinite ease-in-out;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-150px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        .gas-collection {
+            width: 80px;
+            height: 250px;
+            margin: 20px auto;
+            position: relative;
+            background: linear-gradient(to top, #74b9ff 85%, transparent 15%);
+            border: 3px solid #0984e3;
+            border-radius: 0 0 40% 40%;
+            overflow: hidden;
+        }
+
+        .water-level {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(116, 185, 255, 0.6);
+            transition: height 0.3s;
+        }
+
+        .h2-gas {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            border-top: 2px dashed #e74c3c;
+            transition: height 0.3s;
+        }
+
+        .uv-light {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 60px;
+            height: 60px;
+            background: #a29bfe;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 0 20px #a29bfe;
+        }
+
+        .uv-light.active {
+            display: flex;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .controls {
+            background: #2d3436;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-start {
+            background: #00b894;
+            color: white;
+        }
+
+        .btn-start:hover {
+            background: #00997a;
+        }
+
+        .btn-stop {
+            background: #e17055;
+            color: white;
+        }
+
+        .btn-stop:hover {
+            background: #d63031;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats {
+            background: #74b9ff;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            display: inline-block;
+            margin: 0 15px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            display: block;
+        }
+
+        .chart-container {
+            grid-column: 1 / -1;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔬 Sodium Borohydride Hydrogen Production Lab</h1>
+            <p>Interactive Simulation - NaBH₄ + 2H₂O → NaBO₂ + 4H₂</p>
+        </div>
+
+        <div class="safety-warning">
+            ⚠️ SAFETY FIRST: Hydrogen is highly flammable! 
+            Always work in ventilated areas, no open flames, wear gloves & goggles!
+        </div>
+
+        <div class="main-content">
+            <div class="experiment-area">
+                <h2>🔥 Experiment Visual</h2>
+                
+                <div class="reaction-flask" id="reactionFlask">
+                    <div class="powder" id="powder">NaBH₄</div>
+                    <div class="bubbles" id="bubbles"></div>
+                </div>
+
+                <div class="uv-light" id="uvLight">☀️</div>
+
+                <div class="gas-collection">
+                    <div class="water-level" id="waterLevel"></div>
+                    <div class="h2-gas" id="h2Gas"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 10px;">
+                    <strong>Gas Collection Cylinder</strong><br>
+                    <span style="color: #e74c3c;">--- H₂ Gas Level</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <h2>🎛️ Experiment Controls</h2>
+                
+                <div class="control-group">
+                    <label>Experiment Mode:</label>
+                    <select id="experimentMode" class="btn" style="background: #636e72;">
+                        <option value="uncatalyzed">❌ Without Catalyst</option>
+                        <option value="catalyzed">✅ With Ni-Co Catalyst</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>NaBH₄ Amount:</label>
+                    <select id="naBH4Amount" class="btn" style="background: #636e72;">
+                        <option value="240">240 mg (Full Experiment)</option>
+                        <option value="100">100 mg (Test Sample)</option>
+                        <option value="84.3">84.3 mg (Small Test)</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="uvLightToggle">
+                    <label for="uvLightToggle">🔦 Enable UV Light (Catalyst Only)</label>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-start" id="startBtn" onclick="startExperiment()">▶️ Start Reaction</button>
+                    <button class="btn btn-stop" id="stopBtn" onclick="stopExperiment()" disabled>⏹️ Stop</button>
+                    <button class="btn" onclick="resetExperiment()" style="background: #fdcb6e; color: #2d3436;">🔄 Reset</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="h2Volume">0</span>
+                        <span>mL H₂</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="timeElapsed">0</span>
+                        <span>sec</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="yieldPercent">0%</span>
+                        <span>Yield</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="hydrogenChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let experimentRunning = false;
+        let startTime = null;
+        let animationId = null;
+        let chart = null;
+        let timeData = [];
+        let volumeData = [];
+        let bubbles = [];
+
+        // Experimental data constants
+        const theoreticalYields = {
+            240: 569,
+            100: 237,
+            84.3: 200
+        };
+
+        // Reaction rates (mL per second)
+        const reactionRates = {
+            uncatalyzed: 0.032, // 115 mL in 60 minutes
+            catalyzed: 2.5, // 150 mL in 60 seconds
+            catalyzed_uv: 3.57 // 250 mL in 21 minutes = ~0.198 mL/sec, but for demo we'll use a faster rate
+        };
+
+        // Initialize Chart
+        const ctx = document.getElementById('hydrogenChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timeData,
+                datasets: [{
+                    label: 'H₂ Volume (mL)',
+                    data: volumeData,
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time (seconds)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'H₂ Volume (mL)'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+
+        function startExperiment() {
+            if (experimentRunning) return;
+            
+            experimentRunning = true;
+            startTime = performance.now();
+            
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            
+            const mode = document.getElementById('experimentMode').value;
+            const uvEnabled = document.getElementById('uvLightToggle').checked;
+            
+            if (mode === 'catalyzed' && uvEnabled) {
+                document.getElementById('uvLight').classList.add('active');
+                document.getElementById('powder').classList.add('catalyst-added');
+            } else if (mode === 'catalyzed') {
+                document.getElementById('powder').classList.add('catalyst-added');
+            }
+            
+            animate();
+        }
+
+        function stopExperiment() {
+            experimentRunning = false;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+
+        function resetExperiment() {
+            stopExperiment();
+            
+            timeData = [];
+            volumeData = [];
+            chart.data.labels = [];
+            chart.data.datasets[0].data = [];
+            chart.update();
+            
+            document.getElementById('h2Volume').textContent = '0';
+            document.getElementById('timeElapsed').textContent = '0';
+            document.getElementById('yieldPercent').textContent = '0%';
+            document.getElementById('h2Gas').style.height = '0%';
+            document.getElementById('waterLevel').style.height = '85%';
+            document.getElementById('uvLight').classList.remove('active');
+            document.getElementById('powder').classList.remove('catalyst-added');
+            
+            const bubblesContainer = document.getElementById('bubbles');
+            bubblesContainer.innerHTML = '';
+        }
+
+        function animate() {
+            if (!experimentRunning) return;
+            
+            const currentTime = performance.now();
+            const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+            
+            const mode = document.getElementById('experimentMode').value;
+            const amount = parseFloat(document.getElementById('naBH4Amount').value);
+            const uvEnabled = document.getElementById('uvLightToggle').checked;
+            
+            let rate = reactionRates[mode];
+            if (mode === 'catalyzed' && uvEnabled) {
+                rate = reactionRates.catalyzed_uv;
+            }
+            
+            // Calculate volume (cap at theoretical yield)
+            const theoreticalYield = theoreticalYields[amount];
+            const volume = Math.min(rate * elapsedSeconds, theoreticalYield * 0.9); // Stop at 90% for realism
+            
+            // Update display
+            document.getElementById('h2Volume').textContent = volume.toFixed(1);
+            document.getElementById('timeElapsed').textContent = elapsedSeconds;
+            document.getElementById('yieldPercent').textContent = 
+                ((volume / theoreticalYield) * 100).toFixed(1) + '%';
+            
+            // Update gas collection visualization
+            const gasHeight = (volume / theoreticalYield) * 85;
+            document.getElementById('h2Gas').style.height = gasHeight + '%';
+            document.getElementById('waterLevel').style.height = (85 - gasHeight) + '%';
+            
+            // Add bubbles
+            if (volume < theoreticalYield * 0.9 && elapsedSeconds % 2 === 0) {
+                createBubble();
+            }
+            
+            // Update chart
+            if (elapsedSeconds % 1 === 0 && (timeData.length === 0 || timeData[timeData.length - 1] !== elapsedSeconds)) {
+                timeData.push(elapsedSeconds);
+                volumeData.push(volume);
+                chart.data.labels = timeData;
+                chart.data.datasets[0].data = volumeData;
+                
+                // Keep only last 50 points for readability
+                if (timeData.length > 50) {
+                    timeData.shift();
+                    volumeData.shift();
+                }
+                
+                chart.update('none');
+            }
+            
+            // Stop at theoretical yield
+            if (volume >= theoreticalYield * 0.9) {
+                stopExperiment();
+                alert('✅ Reaction completed! Maximum yield reached.');
+            }
+            
+            animationId = requestAnimationFrame(animate);
+        }
+
+        function createBubble() {
+            const bubblesContainer = document.getElementById('bubbles');
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = (Math.random() * 30 - 15) + 'px';
+            bubble.style.animationDelay = Math.random() * 0.5 + 's';
+            bubblesContainer.appendChild(bubble);
+            
+            // Remove bubble after animation
+            setTimeout(() => {
+                if (bubble.parentNode) {
+                    bubble.parentNode.removeChild(bubble);
+                }
+            }, 2100);
+        }
+
+        // UV Light toggle logic
+        document.getElementById('uvLightToggle').addEventListener('change', function() {
+            const mode = document.getElementById('experimentMode').value;
+            if (mode !== 'catalyzed') {
+                this.checked = false;
+                alert('⚠️ UV Light can only be used with catalyst!');
+            }
+        });
+
+        // Mode change logic
+        document.getElementById('experimentMode').addEventListener('change', function() {
+            if (this.value === 'uncatalyzed') {
+                document.getElementById('uvLightToggle').checked = false;
+                document.getElementById('uvLight').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
