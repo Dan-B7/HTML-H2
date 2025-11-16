@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - NaBH₄ Hydrogen Project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            background: linear-gradient(90deg, #00b894, #00a085);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .nav-bar {
+            background: #2d3436;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-bar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .nav-bar a:hover {
+            color: #00b894;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #00b894;
+        }
+
+        .section h2 {
+            color: #2d3436;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2 i {
+            color: #00b894;
+        }
+
+        .highlight-box {
+            background: #e8f5f3;
+            border: 2px solid #00b894;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .equation {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5em;
+            text-align: center;
+            background: #2d3436;
+            color: #00b894;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 3px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .comparison-card.catalyzed {
+            border-color: #00b894;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,184,148,0.3);
+        }
+
+        .comparison-card.catalyzed h3 {
+            color: #00b894;
+        }
+
+        .safety-banner {
+            background: #ffeaa7;
+            border: 3px solid #fdcb6e;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .safety-banner i {
+            font-size: 2em;
+            color: #e74c3c;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #74b9ff;
+        }
+
+        .stat-card .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #0984e3;
+            display: block;
+        }
+
+        .footer {
+            background: #2d3436;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-flask"></i> About NaBH₄ Hydrogen Project</h1>
+            <p>Clean Energy Production Through Sodium Borohydride Hydrolysis</p>
+        </div>
+
+        <div class="nav-bar">
+            <a href="hydrogen_simulation.html">
+                <i class="fas fa-arrow-left"></i> Back to Simulator
+            </a>
+            <div>
+                <i class="fas fa-user"></i> Mariem M STEM
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2><i class="fas fa-lightbulb"></i> Project Overview</h2>
+                <p>This project demonstrates how to produce <strong>clean hydrogen gas</strong> from a solid chemical called <strong>sodium borohydride (NaBH₄)</strong>. The goal is to create a safe, controllable hydrogen source for clean energy applications like fuel cells.</p>
+                
+                <div class="highlight-box">
+                    <strong>Key Achievement:</strong> Proving that a Ni-Co catalyst speeds up hydrogen production by <strong>60 times</strong> compared to the uncatalyzed reaction.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-atom"></i> The Science Behind It</h2>
+                <p>Sodium borohydride acts like a "hydrogen storage tank" in solid form. When it reacts with water, it releases hydrogen gas. The magic happens when we add a special catalyst!</p>
+                
+                <div class="equation">
+                    NaBH₄ + 2H₂O → NaBO₂ + 4H₂↑
+                </div>
+                
+                <p><strong>Translation:</strong> One unit of NaBH₄ + water → Harmless salt + 4 molecules of pure hydrogen gas</p>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-tachometer-alt"></i> Speed Comparison</h2>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h3>❌ Without Catalyst</h3>
+                        <p><strong>Rate:</strong> Very Slow</p>
+                        <p><strong>Time:</strong> 60 minutes</p>
+                        <p><strong>Yield:</strong> 115 mL H₂</p>
+                        <p><strong>Status:</strong> Impractical</p>
+                        <p style="color: #e74c3c;">Like watching paint dry!</p>
+                    </div>
+                    
+                    <div class="comparison-card catalyzed">
+                        <h3>✅ With Ni-Co Catalyst</h3>
+                        <p><strong>Rate:</strong> 60× Faster</p>
+                        <p><strong>Time:</strong> 60 seconds</p>
+                        <p><strong>Yield:</strong> 150+ mL H₂</p>
+                        <p><strong>Status:</strong> Practical!</p>
+                        <p style="color: #00b894;">Perfect for real-world use!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-layer-group"></i> The Catalyst: Ni-Co/MWCNT</h2>
+                <p>The catalyst is a masterpiece of nanotechnology:</p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li><strong>Nickel (Ni):</strong> The workhorse that splits water molecules</li>
+                    <li><strong>Cobalt (Co):</strong> Protects nickel and boosts efficiency</li>
+                    <li><strong>Carbon Nanotubes (MWCNT):</strong> Tiny tubes that give a huge surface area for the reaction</li>
+                </ul>
+                <p><strong>Preparation:</strong> Mix solutions → Ultrasonic dispersion → Heat 24h → Dry under nitrogen → Ready!</p>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-sun"></i> UV Light Enhancement</h2>
+                <p>Shining UV light on the catalyst gives it an extra energy boost:</p>
+                <div class="highlight-box">
+                    <strong>UV Effect:</strong> Increases hydrogen production from 150 mL to <strong>250 mL</strong> in the same time frame!
+                </div>
+                <p>The light excites electrons in the catalyst, creating more "reaction hotspots" where hydrogen can form faster.</p>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-globe"></i> Why This Matters</h2>
+                <p>This technology could power a clean energy revolution:</p>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="number">🚗</span>
+                        <strong>Fuel Cell Cars</strong>
+                        <p>Clean transportation</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="number">🏥</span>
+                        <strong>Backup Power</strong>
+                        <p>Hospitals & emergencies</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="number">🏕️</span>
+                        <strong>Portable Energy</strong>
+                        <p>Remote locations</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="number">🔄</span>
+                        <strong>Recyclable</strong>
+                        <p>Byproduct can be reused</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="safety-banner">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>⚠️ SAFETY IS CRITICAL!</strong><br>
+                    Hydrogen is extremely flammable. Always work in ventilated areas, away from flames/sparks, and wear protective equipment!
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-microscope"></i> How the Simulator Works</h2>
+                <p>The simulator uses real experimental data to model the reaction:</p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li>Based on actual measured rates (0.032 mL/s uncatalyzed, 2.5 mL/s catalyzed)</li>
+                    <li>Visual animations show bubble formation and gas collection</li>
+                    <li>Live chart tracks hydrogen volume over time</li>
+                    <li>UV toggle demonstrates light-enhanced catalysis</li>
+                    <li>Time is accelerated so you can see results in seconds!</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-chart-line"></i> Key Results</h2>
+                <div class="highlight-box">
+                    <p><strong>100 mg NaBH₄:</strong></p>
+                    <ul style="margin-top: 10px;">
+                        <li>Theoretical yield: 237 mL H₂</li>
+                        <li>Catalyzed yield: ~95% in 90 seconds</li>
+                        <li>Uncatalyzed yield: ~48% in 60 minutes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2><i class="fas fa-graduation-cap"></i> Learning Objectives</h2>
+                <p>Through this project and simulator, you will understand:</p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li>How catalysts dramatically accelerate chemical reactions</li>
+                    <li>The importance of surface area in catalyst design</li>
+                    <li>Principles of green chemistry and clean energy</li>
+                    <li>Data collection and analysis in experimental chemistry</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><i class="fas fa-flask"></i> NaBH₄ Hydrogen Production Project</p>
+            <p>Developed by Mariem M STEM | Clean Energy Research</p>
+        </div>
+    </div>
+</body>
+</html>
